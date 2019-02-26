@@ -29,7 +29,8 @@
 (defn filtrar-filme [event]
   (let [valor-do-input (-> event .-target .-value)
         filmes-filtrados (filter (fn [item-da-lista]
-                                   (= valor-do-input (:nome item-da-lista )))
+                                   (re-find (re-pattern (str "(?i)" valor-do-input)) 
+                                           (:nome item-da-lista)))
                                  catalogo-filmes
                                  )]
     (reset! estado-do-filme-selecionado nil)
@@ -41,6 +42,9 @@
   
   [:input {:placeholder "buscar filme" :on-change filtrar-filme}])
 
+(defn filme-nao-encontrado []
+  (when (zero? (count @estado-dos-filmes))
+    [:div [:p "Filme não encontrado :("]]))
 
 (defn renderizar-filme-selecionado [filme]
   (when filme  [:div {:style {:background-color :purple
@@ -68,6 +72,7 @@
 
   [:div 
    [busca]
+   [filme-nao-encontrado]
    [:div {:style {:display "flex"
                   :justify-content "left"}} (map chamada-do-filme @estado-dos-filmes)
     ]
