@@ -23,16 +23,33 @@
 
 
 (defonce estado-do-filme-selecionado (reagent/atom nil))
+(defonce estado-dos-filmes (reagent/atom catalogo-filmes))
+
+
+(defn filtrar-filme [event]
+  (let [valor-do-input (-> event .-target .-value)
+        filmes-filtrados (filter (fn [item-da-lista]
+                                   (= valor-do-input (:nome item-da-lista )))
+                                 catalogo-filmes
+                                 )]
+    (reset! estado-do-filme-selecionado nil)
+    (reset! estado-dos-filmes (if (empty? valor-do-input)
+                                                 catalogo-filmes 
+                                                 filmes-filtrados
+                                                 ))))
+(defn busca []
+  
+  [:input {:placeholder "buscar filme" :on-change filtrar-filme}])
 
 
 (defn renderizar-filme-selecionado [filme]
-  [:div {:style {:background-color :purple
-                 :padding 10}}
-   [:h3 {:style {:color "#ffffff"
-                 :text-align :center}} (:nome filme)]
-   [:img {
-          :style {:width "100%"}
-          :src (:video filme)}]])
+  (when filme  [:div {:style {:background-color :purple
+                              :padding 10}}
+                [:h3 {:style {:color "#ffffff"
+                              :text-align :center}} (:nome filme)]
+                [:img {:style {:width "100%"}
+                       :src (:video filme)}]])
+  )
 
 (defn selecionar-filme [filme]
   (reset! estado-do-filme-selecionado filme))
@@ -50,8 +67,9 @@
 (defn netflix []
 
   [:div 
+   [busca]
    [:div {:style {:display "flex"
-                  :justify-content "left"}} (map chamada-do-filme catalogo-filmes)
+                  :justify-content "left"}} (map chamada-do-filme @estado-dos-filmes)
     ]
    [renderizar-filme-selecionado @estado-do-filme-selecionado]])
 
