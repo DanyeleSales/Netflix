@@ -19,6 +19,8 @@
                        :capa "https://m.media-amazon.com/images/M/MV5BMjIwMjE1Nzc4NV5BMl5BanBnXkFtZTgwNDg4OTA1NzM@._V1_UX182_CR0,0,182,268_AL_.jpg"}])
 
 
+
+
 (defonce estado-do-filme-selecionado (reagent/atom nil))
 (defonce estado-dos-filmes (reagent/atom catalogo-filmes))
 
@@ -107,3 +109,7 @@
   ;; stop is called before any code is reloaded
   ;; this is controlled by :before-load in the config
   (js/console.log "stop"))
+
+
+
+
